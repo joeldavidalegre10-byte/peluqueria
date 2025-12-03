@@ -130,8 +130,8 @@ export function CashierSalesModule() {
         </CardHeader>
         <CardContent className="space-y-4">
           {cashRegisters.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
-              <Users className="size-16 mx-auto mb-4 text-gray-400" />
+            <div className="text-center py-12 text-muted-foreground">
+              <Users className="size-16 mx-auto mb-4 text-muted-foreground" />
               <p className="text-lg mb-2">No hay cajas registradas todavía</p>
               <p className="text-sm">Las cajas aparecerán aquí una vez que los cajeros abran su caja</p>
             </div>
@@ -156,26 +156,26 @@ export function CashierSalesModule() {
               {selectedCashier && transactions.length > 0 && (
                 <>
                   <div className="grid grid-cols-4 gap-4">
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <div className="flex items-center gap-2 text-blue-600 mb-1">
+                <div className="bg-secondary p-4 rounded-lg">
+                  <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 ocean:text-blue-400 mb-1">
                     <Users className="size-4" />
                     <p className="text-sm">Total Ventas</p>
                   </div>
                   <p className="text-2xl">{transactions.length}</p>
                 </div>
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <div className="flex items-center gap-2 text-green-600 mb-1">
+                <div className="bg-secondary p-4 rounded-lg">
+                  <div className="flex items-center gap-2 text-green-600 dark:text-green-400 ocean:text-green-400 mb-1">
                     <DollarSign className="size-4" />
                     <p className="text-sm">Total Recaudado</p>
                   </div>
                   <p className="text-xl">₲ {formatGuaranies(totalSales)}</p>
                 </div>
-                <div className="bg-purple-50 p-4 rounded-lg">
-                  <p className="text-sm text-purple-600">Efectivo</p>
+                <div className="bg-secondary p-4 rounded-lg">
+                  <p className="text-sm text-purple-600 dark:text-purple-400 ocean:text-purple-400">Efectivo</p>
                   <p className="text-lg">₲ {formatGuaranies(cashSales)}</p>
                 </div>
-                <div className="bg-orange-50 p-4 rounded-lg">
-                  <p className="text-sm text-orange-600">Tarjeta/Transfer</p>
+                <div className="bg-secondary p-4 rounded-lg">
+                  <p className="text-sm text-orange-600 dark:text-orange-400 ocean:text-orange-400">Tarjeta/Transfer</p>
                   <p className="text-lg">₲ {formatGuaranies(cardSales + transferSales)}</p>
                 </div>
               </div>
@@ -201,12 +201,12 @@ export function CashierSalesModule() {
               {transactions.map((transaction) => (
                 <div
                   key={transaction.id}
-                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="flex items-center justify-between p-4 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-3">
                       <Badge variant="outline">{transaction.id}</Badge>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-muted-foreground">
                         {formatDate(transaction.date)}
                       </span>
                       {transaction.status === 'anulada' && (
@@ -234,7 +234,7 @@ export function CashierSalesModule() {
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="text-right">
-                      <p className="text-sm text-gray-600">Total</p>
+                      <p className="text-sm text-muted-foreground">Total</p>
                       <p className="text-xl text-green-600">₲ {formatGuaranies(transaction.total)}</p>
                     </div>
                     <Button
@@ -254,8 +254,8 @@ export function CashierSalesModule() {
 
       {selectedCashier && transactions.length === 0 && (
         <Card>
-          <CardContent className="py-12 text-center text-gray-500">
-            <Users className="size-12 mx-auto mb-4 text-gray-400" />
+          <CardContent className="py-12 text-center text-muted-foreground">
+            <Users className="size-12 mx-auto mb-4 text-muted-foreground" />
             <p>No hay transacciones para este cajero</p>
           </CardContent>
         </Card>
@@ -292,11 +292,11 @@ export function CashierSalesModule() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-600">Fecha y Hora</p>
+                  <p className="text-sm text-muted-foreground">Fecha y Hora</p>
                   <p>{formatDate(selectedTransaction.date)}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Tipo</p>
+                  <p className="text-sm text-muted-foreground">Tipo</p>
                   <Badge className={
                     selectedTransaction.type === 'servicio' 
                       ? 'bg-blue-100 text-blue-800' 
@@ -306,7 +306,7 @@ export function CashierSalesModule() {
                   </Badge>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Método de Pago</p>
+                  <p className="text-sm text-muted-foreground">Método de Pago</p>
                   {selectedTransaction.paymentMethod === 'mixto' ? (
                     <div className="space-y-1">
                       <Badge className="bg-purple-100 text-purple-800">
@@ -345,24 +345,24 @@ export function CashierSalesModule() {
                   )}
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Total</p>
+                  <p className="text-sm text-muted-foreground">Total</p>
                   <p className="text-xl text-green-600">₲ {formatGuaranies(selectedTransaction.total)}</p>
                 </div>
               </div>
 
               <div className="border-t pt-4">
-                <p className="text-sm text-gray-600 mb-3">Items</p>
+                <p className="text-sm text-muted-foreground mb-3">Items</p>
                 <div className="space-y-2">
                   {selectedTransaction.items.map((item, index) => (
-                    <div key={index} className="flex justify-between items-start p-3 bg-gray-50 rounded-lg">
+                    <div key={index} className="flex justify-between items-start p-3 bg-secondary rounded-lg">
                       <div>
                         <p>{item.name}</p>
                         {item.stylist && (
-                          <p className="text-sm text-gray-600">Estilista: {item.stylist}</p>
+                          <p className="text-sm text-muted-foreground">Estilista: {item.stylist}</p>
                         )}
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                           ₲ {formatGuaranies(item.price)} × {item.quantity}
                         </p>
                         <p className="text-green-600">

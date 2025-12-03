@@ -94,9 +94,9 @@ export function CajeroDashboard({ user, onLogout }: CajeroDashboardProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <header className="bg-card border-b border-border sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
           <div className="flex justify-between items-center gap-3">
             {/* Mobile Menu Button */}
@@ -133,7 +133,7 @@ export function CajeroDashboard({ user, onLogout }: CajeroDashboardProps) {
               
               <div>
                 <h1 className="text-base sm:text-lg md:text-xl">Sistema de Gestión - Salón</h1>
-                <p className="text-gray-600 text-xs md:text-sm hidden sm:block">Cajero: {user.name}</p>
+                <p className="text-muted-foreground text-xs md:text-sm hidden sm:block">Cajero: {user.name}</p>
               </div>
             </div>
             
@@ -186,7 +186,7 @@ export function CajeroDashboard({ user, onLogout }: CajeroDashboardProps) {
 
               {/* Mobile: Show current tab name */}
               <div className="md:hidden mb-4">
-                <h2 className="text-lg font-semibold text-gray-900">
+                <h2 className="text-lg">
                   {menuItems.find(item => item.value === activeTab)?.label}
                 </h2>
               </div>

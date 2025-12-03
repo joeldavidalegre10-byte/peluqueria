@@ -77,12 +77,12 @@ export function LoginPage({ onLogin }: LoginPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 dark:from-black dark:via-black dark:to-black ocean:from-black ocean:via-black ocean:to-black flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="bg-pink-100 p-4 rounded-full">
-              <Scissors className="size-12 text-pink-600" />
+            <div className="bg-secondary p-4 rounded-full">
+              <Scissors className="size-12 text-pink-600 dark:text-pink-400 ocean:text-blue-400" />
             </div>
           </div>
           <CardTitle className="text-3xl">Salón de Belleza</CardTitle>
@@ -93,7 +93,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             <div className="space-y-2">
               <Label htmlFor="username">Usuario</Label>
               <div className="relative">
-                <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                 <Input
                   id="username"
                   type="text"
@@ -108,7 +108,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             <div className="space-y-2">
               <Label htmlFor="password">Contraseña</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                 <Input
                   id="password"
                   type="password"

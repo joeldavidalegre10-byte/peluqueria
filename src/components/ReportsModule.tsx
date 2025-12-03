@@ -242,11 +242,11 @@ export function ReportsModule() {
         <Card>
           <CardContent className="pt-4 pb-4">
             <div className="flex flex-col items-center text-center gap-2">
-              <div className="bg-green-100 p-2 rounded-full">
-                <DollarSign className="size-5 text-green-600" />
+              <div className="bg-secondary p-2 rounded-full">
+                <DollarSign className="size-5 text-green-600 dark:text-green-400 ocean:text-green-400" />
               </div>
               <div>
-                <p className="text-xs text-gray-600">Ventas Totales</p>
+                <p className="text-xs text-muted-foreground">Ventas Totales</p>
                 <p className="text-lg font-semibold">₲ {formatGuaranies(totalSales)}</p>
               </div>
             </div>
@@ -256,11 +256,11 @@ export function ReportsModule() {
         <Card>
           <CardContent className="pt-4 pb-4">
             <div className="flex flex-col items-center text-center gap-2">
-              <div className="bg-blue-100 p-2 rounded-full">
-                <ShoppingBag className="size-5 text-blue-600" />
+              <div className="bg-secondary p-2 rounded-full">
+                <ShoppingBag className="size-5 text-blue-600 dark:text-blue-400 ocean:text-blue-400" />
               </div>
               <div>
-                <p className="text-xs text-gray-600">Transacciones</p>
+                <p className="text-xs text-muted-foreground">Transacciones</p>
                 <p className="text-lg font-semibold">{totalTransactions}</p>
               </div>
             </div>
@@ -270,11 +270,11 @@ export function ReportsModule() {
         <Card>
           <CardContent className="pt-4 pb-4">
             <div className="flex flex-col items-center text-center gap-2">
-              <div className="bg-purple-100 p-2 rounded-full">
-                <TrendingUp className="size-5 text-purple-600" />
+              <div className="bg-secondary p-2 rounded-full">
+                <TrendingUp className="size-5 text-purple-600 dark:text-purple-400 ocean:text-purple-400" />
               </div>
               <div>
-                <p className="text-xs text-gray-600">Ticket Promedio</p>
+                <p className="text-xs text-muted-foreground">Ticket Promedio</p>
                 <p className="text-lg font-semibold">
                   ₲ {totalTransactions > 0 ? formatGuaranies(totalSales / totalTransactions) : '0'}
                 </p>
@@ -286,11 +286,11 @@ export function ReportsModule() {
         <Card>
           <CardContent className="pt-4 pb-4">
             <div className="flex flex-col items-center text-center gap-2">
-              <div className="bg-orange-100 p-2 rounded-full">
-                <Calendar className="size-5 text-orange-600" />
+              <div className="bg-secondary p-2 rounded-full">
+                <Calendar className="size-5 text-orange-600 dark:text-orange-400 ocean:text-orange-400" />
               </div>
               <div>
-                <p className="text-xs text-gray-600">Días Activos</p>
+                <p className="text-xs text-muted-foreground">Días Activos</p>
                 <p className="text-lg font-semibold">{cashRegisters.length}</p>
               </div>
             </div>
@@ -332,10 +332,10 @@ export function ReportsModule() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-lg gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-secondary rounded-lg gap-2">
                   <div>
                     <p>Efectivo</p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       {filteredTransactions.filter((t) => t.paymentMethod === 'efectivo').length}{' '}
                       transacciones directas
                       {filteredTransactions.filter((t) => t.paymentMethod === 'mixto' && t.paymentDetails?.efectivo).length > 0 && 
@@ -344,10 +344,10 @@ export function ReportsModule() {
                   </div>
                   <p className="text-xl sm:text-2xl text-green-600">₲ {formatGuaranies(cashSales)}</p>
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-lg gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-secondary rounded-lg gap-2">
                   <div>
                     <p>Tarjeta</p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       {filteredTransactions.filter((t) => t.paymentMethod === 'tarjeta').length}{' '}
                       transacciones directas
                       {filteredTransactions.filter((t) => t.paymentMethod === 'mixto' && t.paymentDetails?.tarjeta).length > 0 && 
@@ -356,10 +356,10 @@ export function ReportsModule() {
                   </div>
                   <p className="text-xl sm:text-2xl text-green-600">₲ {formatGuaranies(cardSales)}</p>
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-lg gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-secondary rounded-lg gap-2">
                   <div>
                     <p>Transferencia</p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       {filteredTransactions.filter((t) => t.paymentMethod === 'transferencia').length}{' '}
                       transacciones directas
                       {filteredTransactions.filter((t) => t.paymentMethod === 'mixto' && t.paymentDetails?.transferencia).length > 0 && 
@@ -380,19 +380,19 @@ export function ReportsModule() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-lg gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-secondary rounded-lg gap-2">
                   <div>
                     <p>Servicios</p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       {filteredTransactions.filter((t) => t.type === 'servicio').length} transacciones
                     </p>
                   </div>
                   <p className="text-xl sm:text-2xl text-green-600">₲ {formatGuaranies(servicesSales)}</p>
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-lg gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-secondary rounded-lg gap-2">
                   <div>
                     <p>Productos</p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       {filteredTransactions.filter((t) => t.type === 'producto').length} transacciones
                     </p>
                   </div>
@@ -413,16 +413,16 @@ export function ReportsModule() {
             <CardContent>
               <div className="space-y-3">
                 {topStylists.length === 0 ? (
-                  <p className="text-center text-gray-500 py-8">No hay datos disponibles</p>
+                  <p className="text-center text-muted-foreground py-8">No hay datos disponibles</p>
                 ) : (
                   topStylists.map((stylist, idx) => (
-                    <div key={stylist.name} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                    <div key={stylist.name} className="flex items-center gap-4 p-3 bg-secondary rounded-lg">
                       <div className="bg-blue-100 text-blue-600 rounded-full size-8 flex items-center justify-center">
                         <Users className="size-4" />
                       </div>
                       <div className="flex-1">
                         <p>{stylist.name}</p>
-                        <p className="text-sm text-gray-600">{stylist.services} servicios realizados</p>
+                        <p className="text-sm text-muted-foreground">{stylist.services} servicios realizados</p>
                       </div>
                       <p className="text-base sm:text-lg text-green-600">₲ {formatGuaranies(stylist.total)}</p>
                     </div>
@@ -440,7 +440,7 @@ export function ReportsModule() {
             </CardHeader>
             <CardContent>
               {dailySales.length === 0 ? (
-                <p className="text-center text-gray-500 py-8">No hay datos disponibles</p>
+                <p className="text-center text-muted-foreground py-8">No hay datos disponibles</p>
               ) : (
                 <div className="space-y-6">
                   {dailySales.map((day) => {
@@ -461,7 +461,7 @@ export function ReportsModule() {
                     return (
                       <div key={day.date} className="border rounded-lg overflow-hidden">
                         {/* Header del día */}
-                        <div className="flex items-center justify-between p-4 bg-gray-50 border-b">
+                        <div className="flex items-center justify-between p-4 bg-secondary border-b">
                           <div>
                             <p className="font-semibold">{new Date(day.date).toLocaleDateString('es-ES', {
                               weekday: 'long',
@@ -469,7 +469,7 @@ export function ReportsModule() {
                               month: 'long',
                               day: 'numeric',
                             })}</p>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-muted-foreground">
                               {dayTransactions.length} transacciones • {allItems.length} items
                             </p>
                           </div>
@@ -516,7 +516,7 @@ export function ReportsModule() {
                                       <div>
                                         <p>{item.name}</p>
                                         {item.stylist && (
-                                          <p className="text-sm text-gray-500">Estilista: {item.stylist}</p>
+                                          <p className="text-sm text-muted-foreground">Estilista: {item.stylist}</p>
                                         )}
                                       </div>
                                     </TableCell>
@@ -546,7 +546,7 @@ export function ReportsModule() {
                               <TableBody>
                                 {allItems.filter(i => i.type === 'servicio').length === 0 ? (
                                   <TableRow>
-                                    <TableCell colSpan={5} className="text-center text-gray-500 py-8">
+                                    <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                                       No hay servicios registrados en este día
                                     </TableCell>
                                   </TableRow>
@@ -581,7 +581,7 @@ export function ReportsModule() {
                               <TableBody>
                                 {allItems.filter(i => i.type === 'producto').length === 0 ? (
                                   <TableRow>
-                                    <TableCell colSpan={4} className="text-center text-gray-500 py-8">
+                                    <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
                                       No hay productos registrados en este día
                                     </TableCell>
                                   </TableRow>
@@ -617,7 +617,7 @@ export function ReportsModule() {
             </CardHeader>
             <CardContent>
               {weeklySales.length === 0 ? (
-                <p className="text-center text-gray-500 py-8">No hay datos disponibles</p>
+                <p className="text-center text-muted-foreground py-8">No hay datos disponibles</p>
               ) : (
                 <div className="space-y-6">
                   {weeklySales.map((week) => {
@@ -648,7 +648,7 @@ export function ReportsModule() {
                     return (
                       <div key={week.startDate} className="border rounded-lg overflow-hidden">
                         {/* Header de la semana */}
-                        <div className="p-4 bg-gray-50 border-b space-y-3">
+                        <div className="p-4 bg-secondary border-b space-y-3">
                           <div className="flex items-center justify-between">
                             <div>
                               <p className="font-semibold">
@@ -661,20 +661,20 @@ export function ReportsModule() {
                                   year: 'numeric',
                                 })}
                               </p>
-                              <p className="text-sm text-gray-600">
+                              <p className="text-sm text-muted-foreground">
                                 {week.transactions} transacciones • {allItems.length} items
                               </p>
                             </div>
                             <p className="text-2xl text-green-600">₲ {formatGuaranies(week.total)}</p>
                           </div>
-                          <div className="grid grid-cols-2 gap-4 pt-3 border-t border-gray-200">
+                          <div className="grid grid-cols-2 gap-4 pt-3 border-t">
                             <div>
-                              <p className="text-xs text-gray-600">Promedio por día</p>
-                              <p className="text-lg text-gray-800">₲ {formatGuaranies(avgPerDay)}</p>
+                              <p className="text-xs text-muted-foreground">Promedio por día</p>
+                              <p className="text-lg">₲ {formatGuaranies(avgPerDay)}</p>
                             </div>
                             <div>
-                              <p className="text-xs text-gray-600">Promedio por transacción</p>
-                              <p className="text-lg text-gray-800">
+                              <p className="text-xs text-muted-foreground">Promedio por transacción</p>
+                              <p className="text-lg">
                                 ₲ {formatGuaranies(week.total / week.transactions)}
                               </p>
                             </div>
@@ -721,7 +721,7 @@ export function ReportsModule() {
                                       <div>
                                         <p>{item.name}</p>
                                         {item.stylist && (
-                                          <p className="text-sm text-gray-500">Estilista: {item.stylist}</p>
+                                          <p className="text-sm text-muted-foreground">Estilista: {item.stylist}</p>
                                         )}
                                       </div>
                                     </TableCell>
@@ -751,7 +751,7 @@ export function ReportsModule() {
                               <TableBody>
                                 {allItems.filter(i => i.type === 'servicio').length === 0 ? (
                                   <TableRow>
-                                    <TableCell colSpan={5} className="text-center text-gray-500 py-8">
+                                    <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                                       No hay servicios registrados en esta semana
                                     </TableCell>
                                   </TableRow>
@@ -786,7 +786,7 @@ export function ReportsModule() {
                               <TableBody>
                                 {allItems.filter(i => i.type === 'producto').length === 0 ? (
                                   <TableRow>
-                                    <TableCell colSpan={4} className="text-center text-gray-500 py-8">
+                                    <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
                                       No hay productos registrados en esta semana
                                     </TableCell>
                                   </TableRow>

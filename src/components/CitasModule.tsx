@@ -251,7 +251,7 @@ export function CitasModule() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredAppointments.length === 0 ? (
           <Card className="col-span-full">
-            <CardContent className="py-12 text-center text-gray-500">
+            <CardContent className="py-12 text-center text-muted-foreground">
               No hay citas programadas para esta fecha
             </CardContent>
           </Card>
@@ -265,12 +265,12 @@ export function CitasModule() {
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Phone className="size-4" />
                   {appointment.clientPhone}
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="size-4" />
                   {new Date(appointment.date).toLocaleDateString('es-ES', {
                     weekday: 'long',
@@ -279,18 +279,18 @@ export function CitasModule() {
                   })}
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Clock className="size-4" />
                   {appointment.time}
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <User className="size-4" />
                   {appointment.stylist}
                 </div>
 
                 <div className="pt-2">
-                  <p className="text-sm text-gray-600 mb-2">Servicios:</p>
+                  <p className="text-sm text-muted-foreground mb-2">Servicios:</p>
                   <div className="flex flex-wrap gap-1">
                     {appointment.services.map((service, idx) => (
                       <Badge key={idx} variant="outline">

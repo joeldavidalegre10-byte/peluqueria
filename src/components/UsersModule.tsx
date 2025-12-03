@@ -137,12 +137,12 @@ export function UsersModule() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl">Gestión de Usuarios</h2>
-          <p className="text-gray-600">Administra cajeros y administradores del sistema</p>
+      <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+        <div className="flex-1">
+          <h2 className="text-2xl mb-2">Gestión de Usuarios</h2>
+          <p className="text-muted-foreground">Administra cajeros y administradores del sistema</p>
         </div>
-        <Button onClick={() => setShowAddModal(true)} size="lg">
+        <Button onClick={() => setShowAddModal(true)} size="lg" className="md:mt-0">
           <UserPlus className="size-4 mr-2" />
           Nuevo Usuario
         </Button>
@@ -153,12 +153,12 @@ export function UsersModule() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-3">
-              <div className="bg-purple-100 p-3 rounded-full">
-                <Shield className="size-6 text-purple-600" />
+              <div className="bg-secondary p-3 rounded-full">
+                <Shield className="size-6 text-purple-600 dark:text-purple-400 ocean:text-purple-400" />
               </div>
               <div>
                 <CardTitle>Administradores</CardTitle>
-                <p className="text-sm text-gray-600">{admins.length} usuarios</p>
+                <p className="text-sm text-muted-foreground">{admins.length} usuarios</p>
               </div>
             </div>
           </CardHeader>
@@ -167,13 +167,13 @@ export function UsersModule() {
               {admins.map((user) => (
                 <div
                   key={user.id}
-                  className="flex items-center justify-between p-4 bg-purple-50 rounded-lg"
+                  className="flex items-center justify-between p-4 bg-secondary rounded-lg"
                 >
                   <div className="flex items-center gap-3">
-                    <Shield className="size-5 text-purple-600" />
+                    <Shield className="size-5 text-purple-600 dark:text-purple-400 ocean:text-purple-400" />
                     <div>
                       <p className="font-medium">{user.name}</p>
-                      <p className="text-sm text-gray-600">@{user.username}</p>
+                      <p className="text-sm text-muted-foreground">@{user.username}</p>
                     </div>
                   </div>
                   <Button
@@ -187,7 +187,7 @@ export function UsersModule() {
                 </div>
               ))}
               {admins.length === 0 && (
-                <p className="text-center text-gray-500 py-8">No hay administradores</p>
+                <p className="text-center text-muted-foreground py-8">No hay administradores</p>
               )}
             </div>
           </CardContent>
@@ -197,12 +197,12 @@ export function UsersModule() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-3">
-              <div className="bg-green-100 p-3 rounded-full">
-                <UserCircle className="size-6 text-green-600" />
+              <div className="bg-secondary p-3 rounded-full">
+                <UserCircle className="size-6 text-green-600 dark:text-green-400 ocean:text-green-400" />
               </div>
               <div>
                 <CardTitle>Cajeros</CardTitle>
-                <p className="text-sm text-gray-600">{cajeros.length} usuarios</p>
+                <p className="text-sm text-muted-foreground">{cajeros.length} usuarios</p>
               </div>
             </div>
           </CardHeader>
@@ -211,13 +211,13 @@ export function UsersModule() {
               {cajeros.map((user) => (
                 <div
                   key={user.id}
-                  className="flex items-center justify-between p-4 bg-green-50 rounded-lg"
+                  className="flex items-center justify-between p-4 bg-secondary rounded-lg"
                 >
                   <div className="flex items-center gap-3">
-                    <UserCircle className="size-5 text-green-600" />
+                    <UserCircle className="size-5 text-green-600 dark:text-green-400 ocean:text-green-400" />
                     <div>
                       <p className="font-medium">{user.name}</p>
-                      <p className="text-sm text-gray-600">@{user.username}</p>
+                      <p className="text-sm text-muted-foreground">@{user.username}</p>
                     </div>
                   </div>
                   <Button
@@ -230,7 +230,7 @@ export function UsersModule() {
                 </div>
               ))}
               {cajeros.length === 0 && (
-                <p className="text-center text-gray-500 py-8">No hay cajeros</p>
+                <p className="text-center text-muted-foreground py-8">No hay cajeros</p>
               )}
             </div>
           </CardContent>

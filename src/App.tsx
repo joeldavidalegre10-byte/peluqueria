@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LoginPage } from './components/LoginPage';
 import { CajeroDashboard } from './components/CajeroDashboard';
 import { AdminDashboard } from './components/AdminDashboard';
@@ -93,6 +93,14 @@ export interface Appointment {
 function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
+  // Cargar y aplicar tema guardado inmediatamente al cargar
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('salon-theme') || 'light';
+    const root = document.documentElement;
+    root.classList.remove('light', 'dark', 'ocean');
+    root.classList.add(savedTheme);
+  }, []);
+
   const handleLogin = (user: User) => {
     setCurrentUser(user);
   };
@@ -106,7 +114,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background text-foreground">
       {currentUser.role === 'cajero' ? (
         <CajeroDashboard user={currentUser} onLogout={handleLogout} />
       ) : (

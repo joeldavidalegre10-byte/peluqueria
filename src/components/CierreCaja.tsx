@@ -103,7 +103,7 @@ export function CierreCaja({ cashRegister, onClose }: CierreCajaProps) {
           {/* Desglose por Método de Pago */}
           <div>
             <h3 className="mb-3">Desglose por Método de Pago</h3>
-            <div className="space-y-2 bg-gray-50 p-4 rounded-lg">
+            <div className="space-y-2 bg-secondary p-4 rounded-lg">
               <div className="flex flex-col sm:flex-row justify-between gap-1">
                 <span>Efectivo:</span>
                 <span className="font-semibold">₲ {formatGuaranies(cashSales)}</span>
@@ -126,7 +126,7 @@ export function CierreCaja({ cashRegister, onClose }: CierreCajaProps) {
           {/* Desglose por Tipo */}
           <div>
             <h3 className="mb-3">Desglose por Tipo</h3>
-            <div className="space-y-2 bg-gray-50 p-4 rounded-lg">
+            <div className="space-y-2 bg-secondary p-4 rounded-lg">
               <div className="flex flex-col sm:flex-row justify-between gap-1">
                 <span>Servicios:</span>
                 <span className="font-semibold">₲ {formatGuaranies(servicesSales)}</span>
@@ -150,7 +150,7 @@ export function CierreCaja({ cashRegister, onClose }: CierreCajaProps) {
                   Efectivo Contado (Físico en Caja)
                 </Label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                     ₲
                   </span>
                   <Input
@@ -165,14 +165,14 @@ export function CierreCaja({ cashRegister, onClose }: CierreCajaProps) {
                     required
                   />
                 </div>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted-foreground">
                   Cuenta el efectivo físico en la caja y registra el monto total
                 </p>
               </div>
 
               {actualCash && (
                 <div className="space-y-3">
-                  <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+                  <div className="bg-secondary p-4 rounded-lg space-y-2">
                     <div className="flex justify-between">
                       <span>Efectivo Esperado:</span>
                       <span>₲ {formatGuaranies(expectedCash)}</span>
@@ -230,7 +230,7 @@ export function CierreCaja({ cashRegister, onClose }: CierreCajaProps) {
                 </AlertDescription>
               </Alert>
 
-              <div className="bg-gray-900 text-white p-6 rounded-lg space-y-2">
+              <div className="bg-primary text-primary-foreground p-6 rounded-lg space-y-2">
                 <h4 className="text-center mb-4">Resumen Final</h4>
                 <div className="flex justify-between">
                   <span>Monto Inicial:</span>

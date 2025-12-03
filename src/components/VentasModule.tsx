@@ -313,7 +313,7 @@ export function VentasModule({ cashRegister, cart, setCart }: VentasModuleProps)
                     >
                       <span className="text-sm md:text-base">{service.name}</span>
                       <span className="text-green-600 text-sm md:text-base">₲ {formatGuaranies(service.price)}</span>
-                      <span className="text-xs text-gray-500">{service.duration} min</span>
+                      <span className="text-xs text-muted-foreground">{service.duration} min</span>
                     </Button>
                   ))}
                 </div>
@@ -331,7 +331,7 @@ export function VentasModule({ cashRegister, cart, setCart }: VentasModuleProps)
                     >
                       <span className="text-sm md:text-base">{product.name}</span>
                       <span className="text-green-600 text-sm md:text-base">₲ {formatGuaranies(product.price)}</span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-muted-foreground">
                         Stock: {product.stock}
                       </span>
                       {product.stock <= product.minStock && (
@@ -375,18 +375,18 @@ export function VentasModule({ cashRegister, cart, setCart }: VentasModuleProps)
           </CardHeader>
           <CardContent className="space-y-4">
             {cart.length === 0 ? (
-              <p className="text-center text-gray-500 py-8 text-sm md:text-base">
+              <p className="text-center text-muted-foreground py-8 text-sm md:text-base">
                 No hay items en el carrito
               </p>
             ) : (
               <>
                 <div className="space-y-3 max-h-80 md:max-h-96 overflow-y-auto">
                   {cart.map((item) => (
-                    <div key={item.id} className="flex items-start gap-2 p-2 md:p-3 bg-gray-50 rounded-lg">
+                    <div key={item.id} className="flex items-start gap-2 p-2 md:p-3 bg-secondary rounded-lg">
                       <div className="flex-1 min-w-0">
                         <p className="text-sm md:text-base truncate">{item.name}</p>
                         {item.stylist && (
-                          <p className="text-xs md:text-sm text-gray-600 truncate">
+                          <p className="text-xs md:text-sm text-muted-foreground truncate">
                             Estilista: {item.stylist}
                           </p>
                         )}
@@ -441,11 +441,11 @@ export function VentasModule({ cashRegister, cart, setCart }: VentasModuleProps)
           <CardContent>
             <div className="space-y-2">
               <div className="flex justify-between text-sm md:text-base">
-                <span className="text-gray-600">Ventas Totales:</span>
+                <span className="text-muted-foreground">Ventas Totales:</span>
                 <span>{transactions.length}</span>
               </div>
               <div className="flex justify-between text-sm md:text-base">
-                <span className="text-gray-600">Total Recaudado:</span>
+                <span className="text-muted-foreground">Total Recaudado:</span>
                 <span className="text-green-600">
                   ₲ {formatGuaranies(transactions.reduce((sum, t) => sum + t.total, 0))}
                 </span>
@@ -472,7 +472,7 @@ export function VentasModule({ cashRegister, cart, setCart }: VentasModuleProps)
           </DialogHeader>
           <div className="space-y-6 overflow-y-auto pr-2 flex-1">
             {/* Total a pagar */}
-            <div className="bg-gray-900 text-white p-6 rounded-lg text-center">
+            <div className="bg-primary text-primary-foreground p-6 rounded-lg text-center">
               <p className="text-sm mb-2">Total a Pagar</p>
               <p className="text-4xl">₲ {formatGuaranies(total)}</p>
             </div>
@@ -499,7 +499,7 @@ export function VentasModule({ cashRegister, cart, setCart }: VentasModuleProps)
                 <div className="space-y-2">
                   <Label htmlFor="amountReceived">Monto Recibido</Label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                       ₲
                     </span>
                     <Input
@@ -574,7 +574,7 @@ export function VentasModule({ cashRegister, cart, setCart }: VentasModuleProps)
                   <div className="space-y-2">
                     <Label htmlFor="pagoEfectivo">Efectivo</Label>
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                         ₲
                       </span>
                       <Input
@@ -597,7 +597,7 @@ export function VentasModule({ cashRegister, cart, setCart }: VentasModuleProps)
                   <div className="space-y-2">
                     <Label htmlFor="pagoTarjeta">Tarjeta</Label>
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                         ₲
                       </span>
                       <Input
@@ -620,7 +620,7 @@ export function VentasModule({ cashRegister, cart, setCart }: VentasModuleProps)
                   <div className="space-y-2">
                     <Label htmlFor="pagoTransferencia">Transferencia</Label>
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                         ₲
                       </span>
                       <Input
@@ -671,7 +671,7 @@ export function VentasModule({ cashRegister, cart, setCart }: VentasModuleProps)
 
             {/* Mensaje para pagos no efectivo y no mixto */}
             {(paymentMethod === 'tarjeta' || paymentMethod === 'transferencia') && (
-              <div className="bg-gray-50 p-4 rounded-lg text-center text-gray-600">
+              <div className="bg-secondary p-4 rounded-lg text-center text-muted-foreground">
                 El pago se registrará como {paymentMethod}
               </div>
             )}

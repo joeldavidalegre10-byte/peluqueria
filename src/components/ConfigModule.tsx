@@ -1,40 +1,23 @@
 import { useState, useEffect } from 'react';
-import { Service, Product, MiscItem } from '../App';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { User } from '../App';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
-import { Plus, Edit, Scissors, Package, Trash2, Sparkles } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { formatGuaranies } from '../utils/currency';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Settings, Key, Palette, Sun, Moon, Waves } from 'lucide-react';
 import { ConfirmModal } from './ConfirmModal';
-import { 
-  getServices, 
-  getProducts, 
-  addService, 
-  updateService, 
-  deleteService,
-  addProduct,
-  updateProduct,
-  deleteProduct,
-  getMiscItems,
-  addMiscItem,
-  updateMiscItem,
-  deleteMiscItem
-} from '../utils/database';
+import { getUsers, updateUser } from '../utils/database';
+
+type Theme = 'light' | 'dark' | 'ocean';
 
 export function ConfigModule() {
-  const [services, setServices] = useState<Service[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [miscItems, setMiscItems] = useState<MiscItem[]>([]);
-  const [isServiceDialogOpen, setIsServiceDialogOpen] = useState(false);
-  const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
-  const [isMiscItemDialogOpen, setIsMiscItemDialogOpen] = useState(false);
-  const [editingService, setEditingService] = useState<Service | null>(null);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [editingMiscItem, setEditingMiscItem] = useState<MiscItem | null>(null);
-
+  const [users, setUsers] = useState<User[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<string>('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [theme, setTheme] = useState<Theme>('light');
+  
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [confirmModalProps, setConfirmModalProps] = useState({
     title: '',
@@ -42,55 +25,101 @@ export function ConfigModule() {
     type: 'info' as 'success' | 'error' | 'warning' | 'info',
   });
 
-  const [serviceForm, setServiceForm] = useState({
-    name: '',
-    price: '',
-    duration: '',
-    commission: '',
-  });
-
-  const [productForm, setProductForm] = useState({
-    name: '',
-    price: '',
-    stock: '',
-    minStock: '',
-    category: '',
-  });
-
-  const [miscItemForm, setMiscItemForm] = useState({
-    name: '',
-    price: '',
-    stock: '',
-    minStock: '',
-  });
-
   useEffect(() => {
-    loadData();
+    loadUsers();
+    loadTheme();
   }, []);
 
-  const loadData = async () => {
+  const loadUsers = async () => {
     try {
-      const [loadedServices, loadedProducts, loadedMiscItems] = await Promise.all([
-        getServices(),
-        getProducts(),
-        getMiscItems(),
-      ]);
-      setServices(loadedServices);
-      setProducts(loadedProducts);
-      setMiscItems(loadedMiscItems);
+      const loaded = await getUsers();
+      setUsers(loaded);
     } catch (error) {
-      console.error('Error al cargar datos:', error);
+      console.error('Error al cargar usuarios:', error);
     }
   };
 
-  // Funciones para Servicios
-  const handleServiceSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const loadTheme = () => {
+    const savedTheme = localStorage.getItem('salon-theme') as Theme;
+    if (savedTheme) {
+      setTheme(savedTheme);
+      applyTheme(savedTheme);
+    }
+  };
 
-    if (!serviceForm.name || !serviceForm.price || !serviceForm.duration || !serviceForm.commission) {
+  const applyTheme = (newTheme: Theme) => {
+    const root = document.documentElement;
+    
+    // Remover todas las clases de tema
+    root.classList.remove('light', 'dark', 'ocean');
+    
+    // Agregar la nueva clase de tema
+    root.classList.add(newTheme);
+    
+    // Guardar en localStorage
+    localStorage.setItem('salon-theme', newTheme);
+  };
+
+  const handleThemeChange = (newTheme: Theme) => {
+    setTheme(newTheme);
+    applyTheme(newTheme);
+    
+    setConfirmModalProps({
+      title: '¡Tema Cambiado!',
+      description: `El tema ha sido cambiado a ${getThemeName(newTheme)} exitosamente`,
+      type: 'success',
+    });
+    setShowConfirmModal(true);
+  };
+
+  const getThemeName = (theme: Theme): string => {
+    switch (theme) {
+      case 'light':
+        return 'Modo Claro';
+      case 'dark':
+        return 'Modo Nocturno';
+      case 'ocean':
+        return 'Modo Oceánico';
+      default:
+        return '';
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!selectedUserId) {
       setConfirmModalProps({
-        title: 'Datos Incompletos',
-        description: 'Por favor complete todos los campos',
+        title: 'Seleccione un Usuario',
+        description: 'Por favor seleccione el usuario al que desea restablecer la contraseña',
+        type: 'warning',
+      });
+      setShowConfirmModal(true);
+      return;
+    }
+
+    if (!newPassword || !confirmPassword) {
+      setConfirmModalProps({
+        title: 'Campos Incompletos',
+        description: 'Por favor complete todos los campos de contraseña',
+        type: 'warning',
+      });
+      setShowConfirmModal(true);
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setConfirmModalProps({
+        title: 'Contraseñas No Coinciden',
+        description: 'Las contraseñas ingresadas no coinciden. Por favor verifique',
+        type: 'error',
+      });
+      setShowConfirmModal(true);
+      return;
+    }
+
+    if (newPassword.length < 4) {
+      setConfirmModalProps({
+        title: 'Contraseña Muy Corta',
+        description: 'La contraseña debe tener al menos 4 caracteres',
         type: 'warning',
       });
       setShowConfirmModal(true);
@@ -98,705 +127,201 @@ export function ConfigModule() {
     }
 
     try {
-      if (editingService) {
-        const updatedService = {
-          ...editingService,
-          name: serviceForm.name,
-          price: parseFloat(serviceForm.price.replace(/\./g, '')),
-          duration: parseInt(serviceForm.duration),
-          commission: parseFloat(serviceForm.commission),
-        };
-        await updateService(updatedService);
+      const user = users.find(u => u.id === selectedUserId);
+      if (user) {
+        const updatedUser = { ...user, password: newPassword };
+        await updateUser(updatedUser);
+        
         setConfirmModalProps({
-          title: '¡Servicio Actualizado!',
-          description: `El servicio "${serviceForm.name}" ha sido actualizado exitosamente`,
+          title: '¡Contraseña Restablecida!',
+          description: `La contraseña de ${user.name} ha sido restablecida exitosamente`,
           type: 'success',
         });
-      } else {
-        const newService: Service = {
-          id: `S${Date.now()}`,
-          name: serviceForm.name,
-          price: parseFloat(serviceForm.price.replace(/\./g, '')),
-          duration: parseInt(serviceForm.duration),
-          commission: parseFloat(serviceForm.commission),
-        };
-        await addService(newService);
-        setConfirmModalProps({
-          title: '¡Servicio Agregado!',
-          description: `El servicio "${serviceForm.name}" ha sido agregado exitosamente`,
-          type: 'success',
-        });
+        setShowConfirmModal(true);
+        
+        // Limpiar formulario
+        setSelectedUserId('');
+        setNewPassword('');
+        setConfirmPassword('');
       }
-
-      await loadData();
-      resetServiceForm();
-      setShowConfirmModal(true);
     } catch (error) {
-      console.error('Error al guardar servicio:', error);
+      console.error('Error al restablecer contraseña:', error);
       setConfirmModalProps({
         title: 'Error',
-        description: 'No se pudo guardar el servicio',
+        description: 'Hubo un error al restablecer la contraseña',
         type: 'error',
       });
       setShowConfirmModal(true);
     }
-  };
-
-  const resetServiceForm = () => {
-    setServiceForm({ name: '', price: '', duration: '', commission: '' });
-    setEditingService(null);
-    setIsServiceDialogOpen(false);
-  };
-
-  const handleEditService = (service: Service) => {
-    setEditingService(service);
-    setServiceForm({
-      name: service.name,
-      price: formatGuaranies(service.price),
-      duration: service.duration.toString(),
-      commission: service.commission.toString(),
-    });
-    setIsServiceDialogOpen(true);
-  };
-
-  const handleDeleteService = async (service: Service) => {
-    try {
-      await deleteService(service.id);
-      await loadData();
-      setConfirmModalProps({
-        title: 'Servicio Eliminado',
-        description: `El servicio "${service.name}" ha sido eliminado`,
-        type: 'info',
-      });
-      setShowConfirmModal(true);
-    } catch (error) {
-      console.error('Error al eliminar servicio:', error);
-      setConfirmModalProps({
-        title: 'Error',
-        description: 'No se pudo eliminar el servicio',
-        type: 'error',
-      });
-      setShowConfirmModal(true);
-    }
-  };
-
-  const handleServicePriceChange = (value: string) => {
-    const numbers = value.replace(/\D/g, '');
-    if (numbers === '') {
-      setServiceForm({ ...serviceForm, price: '' });
-      return;
-    }
-    const formatted = formatGuaranies(parseInt(numbers));
-    setServiceForm({ ...serviceForm, price: formatted });
-  };
-
-  // Funciones para Productos
-  const handleProductSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!productForm.name || !productForm.price || !productForm.stock || !productForm.minStock || !productForm.category) {
-      setConfirmModalProps({
-        title: 'Datos Incompletos',
-        description: 'Por favor complete todos los campos',
-        type: 'warning',
-      });
-      setShowConfirmModal(true);
-      return;
-    }
-
-    try {
-      if (editingProduct) {
-        const updatedProduct = {
-          ...editingProduct,
-          name: productForm.name,
-          price: parseFloat(productForm.price.replace(/\./g, '')),
-          stock: parseInt(productForm.stock),
-          minStock: parseInt(productForm.minStock),
-          category: productForm.category,
-        };
-        await updateProduct(updatedProduct);
-        setConfirmModalProps({
-          title: '¡Producto Actualizado!',
-          description: `El producto "${productForm.name}" ha sido actualizado exitosamente`,
-          type: 'success',
-        });
-      } else {
-        const newProduct: Product = {
-          id: `P${Date.now()}`,
-          name: productForm.name,
-          price: parseFloat(productForm.price.replace(/\./g, '')),
-          stock: parseInt(productForm.stock),
-          minStock: parseInt(productForm.minStock),
-          category: productForm.category,
-        };
-        await addProduct(newProduct);
-        setConfirmModalProps({
-          title: '¡Producto Agregado!',
-          description: `El producto "${productForm.name}" ha sido agregado exitosamente`,
-          type: 'success',
-        });
-      }
-
-      await loadData();
-      resetProductForm();
-      setShowConfirmModal(true);
-    } catch (error) {
-      console.error('Error al guardar producto:', error);
-      setConfirmModalProps({
-        title: 'Error',
-        description: 'No se pudo guardar el producto',
-        type: 'error',
-      });
-      setShowConfirmModal(true);
-    }
-  };
-
-  const resetProductForm = () => {
-    setProductForm({ name: '', price: '', stock: '', minStock: '', category: '' });
-    setEditingProduct(null);
-    setIsProductDialogOpen(false);
-  };
-
-  const handleEditProduct = (product: Product) => {
-    setEditingProduct(product);
-    setProductForm({
-      name: product.name,
-      price: formatGuaranies(product.price),
-      stock: product.stock.toString(),
-      minStock: product.minStock.toString(),
-      category: product.category,
-    });
-    setIsProductDialogOpen(true);
-  };
-
-  const handleDeleteProduct = async (product: Product) => {
-    try {
-      await deleteProduct(product.id);
-      await loadData();
-      setConfirmModalProps({
-        title: 'Producto Eliminado',
-        description: `El producto "${product.name}" ha sido eliminado`,
-        type: 'info',
-      });
-      setShowConfirmModal(true);
-    } catch (error) {
-      console.error('Error al eliminar producto:', error);
-      setConfirmModalProps({
-        title: 'Error',
-        description: 'No se pudo eliminar el producto',
-        type: 'error',
-      });
-      setShowConfirmModal(true);
-    }
-  };
-
-  const handleProductPriceChange = (value: string) => {
-    const numbers = value.replace(/\D/g, '');
-    if (numbers === '') {
-      setProductForm({ ...productForm, price: '' });
-      return;
-    }
-    const formatted = formatGuaranies(parseInt(numbers));
-    setProductForm({ ...productForm, price: formatted });
-  };
-
-  // Funciones para Artículos Misceláneos
-  const handleMiscItemSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!miscItemForm.name || !miscItemForm.price || !miscItemForm.stock || !miscItemForm.minStock) {
-      setConfirmModalProps({
-        title: 'Datos Incompletos',
-        description: 'Por favor complete todos los campos',
-        type: 'warning',
-      });
-      setShowConfirmModal(true);
-      return;
-    }
-
-    try {
-      if (editingMiscItem) {
-        const updatedMiscItem = {
-          ...editingMiscItem,
-          name: miscItemForm.name,
-          price: parseFloat(miscItemForm.price.replace(/\./g, '')),
-          stock: parseInt(miscItemForm.stock),
-          minStock: parseInt(miscItemForm.minStock),
-        };
-        await updateMiscItem(updatedMiscItem);
-        setConfirmModalProps({
-          title: '¡Artículo Misceláneo Actualizado!',
-          description: `El artículo "${miscItemForm.name}" ha sido actualizado exitosamente`,
-          type: 'success',
-        });
-      } else {
-        const newMiscItem: MiscItem = {
-          id: `M${Date.now()}`,
-          name: miscItemForm.name,
-          price: parseFloat(miscItemForm.price.replace(/\./g, '')),
-          stock: parseInt(miscItemForm.stock),
-          minStock: parseInt(miscItemForm.minStock),
-        };
-        await addMiscItem(newMiscItem);
-        setConfirmModalProps({
-          title: '¡Artículo Misceláneo Agregado!',
-          description: `El artículo "${miscItemForm.name}" ha sido agregado exitosamente`,
-          type: 'success',
-        });
-      }
-
-      await loadData();
-      resetMiscItemForm();
-      setShowConfirmModal(true);
-    } catch (error) {
-      console.error('Error al guardar artículo misceláneo:', error);
-      setConfirmModalProps({
-        title: 'Error',
-        description: 'No se pudo guardar el artículo misceláneo',
-        type: 'error',
-      });
-      setShowConfirmModal(true);
-    }
-  };
-
-  const resetMiscItemForm = () => {
-    setMiscItemForm({ name: '', price: '', stock: '', minStock: '' });
-    setEditingMiscItem(null);
-    setIsMiscItemDialogOpen(false);
-  };
-
-  const handleEditMiscItem = (miscItem: MiscItem) => {
-    setEditingMiscItem(miscItem);
-    setMiscItemForm({
-      name: miscItem.name,
-      price: formatGuaranies(miscItem.price),
-      stock: miscItem.stock.toString(),
-      minStock: miscItem.minStock.toString(),
-    });
-    setIsMiscItemDialogOpen(true);
-  };
-
-  const handleDeleteMiscItem = async (miscItem: MiscItem) => {
-    try {
-      await deleteMiscItem(miscItem.id);
-      await loadData();
-      setConfirmModalProps({
-        title: 'Artículo Misceláneo Eliminado',
-        description: `El artículo "${miscItem.name}" ha sido eliminado`,
-        type: 'info',
-      });
-      setShowConfirmModal(true);
-    } catch (error) {
-      console.error('Error al eliminar artículo misceláneo:', error);
-      setConfirmModalProps({
-        title: 'Error',
-        description: 'No se pudo eliminar el artículo misceláneo',
-        type: 'error',
-      });
-      setShowConfirmModal(true);
-    }
-  };
-
-  const handleMiscItemPriceChange = (value: string) => {
-    const numbers = value.replace(/\D/g, '');
-    if (numbers === '') {
-      setMiscItemForm({ ...miscItemForm, price: '' });
-      return;
-    }
-    const formatted = formatGuaranies(parseInt(numbers));
-    setMiscItemForm({ ...miscItemForm, price: formatted });
   };
 
   return (
     <div className="space-y-6">
-      <Tabs defaultValue="services">
-        <TabsList className="grid w-full grid-cols-3 max-w-2xl h-auto">
-          <TabsTrigger value="services" className="text-xs md:text-sm py-2">
-            <Scissors className="size-3 md:size-4 mr-1 md:mr-2" />
-            <span className="hidden sm:inline">Servicios</span>
-            <span className="inline sm:hidden">Serv.</span>
-          </TabsTrigger>
-          <TabsTrigger value="products" className="text-xs md:text-sm py-2">
-            <Package className="size-3 md:size-4 mr-1 md:mr-2" />
-            <span className="hidden sm:inline">Productos</span>
-            <span className="inline sm:hidden">Prod.</span>
-          </TabsTrigger>
-          <TabsTrigger value="miscItems" className="text-xs md:text-sm py-2">
-            <Sparkles className="size-3 md:size-4 mr-1 md:mr-2" />
-            <span className="hidden sm:inline">Artículos Varios</span>
-            <span className="inline sm:hidden">Arts.</span>
-          </TabsTrigger>
-        </TabsList>
+      <div className="flex items-center gap-3 mb-6">
+        <Settings className="size-8 text-blue-600" />
+        <div>
+          <h2 className="text-2xl">Configuración del Sistema</h2>
+          <p className="text-muted-foreground">Personaliza y administra las configuraciones generales</p>
+        </div>
+      </div>
 
-        {/* TAB DE SERVICIOS */}
-        <TabsContent value="services" className="mt-6">
-          <Card>
-            <CardHeader>
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-                <div>
-                  <CardTitle className="text-lg md:text-xl">Gestión de Servicios</CardTitle>
-                  <p className="text-xs md:text-sm text-gray-600">{services.length} servicios registrados</p>
-                </div>
-                <Dialog open={isServiceDialogOpen} onOpenChange={(open) => {
-                  setIsServiceDialogOpen(open);
-                  if (!open) resetServiceForm();
-                }}>
-                  <DialogTrigger asChild>
-                    <Button className="text-sm">
-                      <Plus className="size-3 md:size-4 mr-2" />
-                      Nuevo Servicio
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>
-                        {editingService ? 'Editar Servicio' : 'Agregar Nuevo Servicio'}
-                      </DialogTitle>
-                      <DialogDescription>
-                        Configura el nombre, precio, duración y comisión del servicio
-                      </DialogDescription>
-                    </DialogHeader>
-                    <form onSubmit={handleServiceSubmit} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="serviceName">Nombre del Servicio</Label>
-                        <Input
-                          id="serviceName"
-                          placeholder="Ej: Corte de Cabello"
-                          value={serviceForm.name}
-                          onChange={(e) => setServiceForm({ ...serviceForm, name: e.target.value })}
-                          required
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="servicePrice">Precio (₲)</Label>
-                          <Input
-                            id="servicePrice"
-                            type="text"
-                            placeholder="50000"
-                            value={serviceForm.price}
-                            onChange={(e) => handleServicePriceChange(e.target.value)}
-                            required
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="serviceDuration">Duración (min)</Label>
-                          <Input
-                            id="serviceDuration"
-                            type="number"
-                            min="5"
-                            step="5"
-                            placeholder="30"
-                            value={serviceForm.duration}
-                            onChange={(e) => setServiceForm({ ...serviceForm, duration: e.target.value })}
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="serviceCommission">Comisión del Estilista (%)</Label>
-                        <Input
-                          id="serviceCommission"
-                          type="number"
-                          step="1"
-                          min="0"
-                          max="100"
-                          placeholder="40"
-                          value={serviceForm.commission === '' ? '' : (parseFloat(serviceForm.commission) * 100).toString()}
-                          onChange={(e) => setServiceForm({ ...serviceForm, commission: (parseFloat(e.target.value) / 100).toString() })}
-                          required
-                        />
-                        <p className="text-sm text-gray-500">
-                          Ingresa el porcentaje (ej: 40 para 40%)
-                        </p>
-                      </div>
-
-                      <Button type="submit" className="w-full">
-                        {editingService ? 'Actualizar Servicio' : 'Agregar Servicio'}
-                      </Button>
-                    </form>
-                  </DialogContent>
-                </Dialog>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Restablecer Contraseña */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <div className="bg-secondary p-3 rounded-full">
+                <Key className="size-6 text-orange-600 dark:text-orange-400 ocean:text-orange-400" />
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {services.map((service) => (
-                  <div key={service.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 md:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors gap-2">
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-sm md:text-base truncate">{service.name}</h4>
-                      <div className="flex flex-wrap gap-2 md:gap-4 mt-1">
-                        <p className="text-xs md:text-sm text-gray-600">₲ {formatGuaranies(service.price)}</p>
-                        <p className="text-xs md:text-sm text-gray-600">{service.duration} min</p>
-                        <p className="text-xs md:text-sm text-gray-600">
-                          Comisión: {(service.commission * 100).toFixed(0)}%
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex gap-2 self-end sm:self-center">
-                      <Button variant="ghost" size="sm" onClick={() => handleEditService(service)} className="h-8 w-8 p-0">
-                        <Edit className="size-3 md:size-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm" onClick={() => handleDeleteService(service)} className="h-8 w-8 p-0">
-                        <Trash2 className="size-3 md:size-4 text-red-500" />
-                      </Button>
-                    </div>
+              <div>
+                <CardTitle>Restablecer Contraseña</CardTitle>
+                <CardDescription>Cambia la contraseña de cualquier usuario del sistema</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="user-select">Seleccionar Usuario</Label>
+              <Select value={selectedUserId} onValueChange={setSelectedUserId}>
+                <SelectTrigger id="user-select">
+                  <SelectValue placeholder="Selecciona un usuario..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {users.map((user) => (
+                    <SelectItem key={user.id} value={user.id}>
+                      {user.name} (@{user.username}) - {user.role === 'admin' ? 'Administrador' : 'Cajero'}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="new-password">Nueva Contraseña</Label>
+              <Input
+                id="new-password"
+                type="password"
+                placeholder="Ingrese la nueva contraseña"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirm-password">Confirmar Contraseña</Label>
+              <Input
+                id="confirm-password"
+                type="password"
+                placeholder="Confirme la nueva contraseña"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </div>
+
+            <Button 
+              onClick={handleResetPassword} 
+              className="w-full"
+              disabled={!selectedUserId || !newPassword || !confirmPassword}
+            >
+              <Key className="size-4 mr-2" />
+              Restablecer Contraseña
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Selector de Tema */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <div className="bg-secondary p-3 rounded-full">
+                <Palette className="size-6 text-purple-600 dark:text-purple-400 ocean:text-purple-400" />
+              </div>
+              <div>
+                <CardTitle>Tema de la Aplicación</CardTitle>
+                <CardDescription>Personaliza la apariencia del sistema</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-3">
+              {/* Modo Claro */}
+              <button
+                onClick={() => handleThemeChange('light')}
+                className={`w-full p-4 rounded-lg border-2 transition-all text-left hover:shadow-md ${
+                  theme === 'light' 
+                    ? 'border-blue-600 bg-secondary' 
+                    : 'border-border hover:border-primary bg-card'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="bg-secondary p-3 rounded-full shadow-sm">
+                    <Sun className="size-6 text-yellow-500" />
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* TAB DE PRODUCTOS */}
-        <TabsContent value="products" className="mt-6">
-          <Card>
-            <CardHeader>
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-                <div>
-                  <CardTitle className="text-lg md:text-xl">Gestión de Productos</CardTitle>
-                  <p className="text-xs md:text-sm text-gray-600">{products.length} productos registrados</p>
-                </div>
-                <Dialog open={isProductDialogOpen} onOpenChange={(open) => {
-                  setIsProductDialogOpen(open);
-                  if (!open) resetProductForm();
-                }}>
-                  <DialogTrigger asChild>
-                    <Button className="text-sm">
-                      <Plus className="size-3 md:size-4 mr-2" />
-                      Nuevo Producto
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>
-                        {editingProduct ? 'Editar Producto' : 'Agregar Nuevo Producto'}
-                      </DialogTitle>
-                      <DialogDescription>
-                        Configura el nombre, precio, stock y categoría del producto
-                      </DialogDescription>
-                    </DialogHeader>
-                    <form onSubmit={handleProductSubmit} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="productName">Nombre del Producto</Label>
-                        <Input
-                          id="productName"
-                          placeholder="Ej: Shampoo Profesional"
-                          value={productForm.name}
-                          onChange={(e) => setProductForm({ ...productForm, name: e.target.value })}
-                          required
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="productCategory">Categoría</Label>
-                        <Input
-                          id="productCategory"
-                          placeholder="Ej: Cuidado Capilar"
-                          value={productForm.category}
-                          onChange={(e) => setProductForm({ ...productForm, category: e.target.value })}
-                          required
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="productPrice">Precio (₲)</Label>
-                          <Input
-                            id="productPrice"
-                            type="text"
-                            placeholder="85000"
-                            value={productForm.price}
-                            onChange={(e) => handleProductPriceChange(e.target.value)}
-                            required
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="productStock">Stock Inicial</Label>
-                          <Input
-                            id="productStock"
-                            type="number"
-                            min="0"
-                            placeholder="20"
-                            value={productForm.stock}
-                            onChange={(e) => setProductForm({ ...productForm, stock: e.target.value })}
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="productMinStock">Stock Mínimo (Alerta)</Label>
-                        <Input
-                          id="productMinStock"
-                          type="number"
-                          min="0"
-                          placeholder="5"
-                          value={productForm.minStock}
-                          onChange={(e) => setProductForm({ ...productForm, minStock: e.target.value })}
-                          required
-                        />
-                        <p className="text-sm text-gray-500">
-                          Se te alertará cuando el stock llegue a este nivel
-                        </p>
-                      </div>
-
-                      <Button type="submit" className="w-full">
-                        {editingProduct ? 'Actualizar Producto' : 'Agregar Producto'}
-                      </Button>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {products.map((product) => (
-                  <div key={product.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 md:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors gap-2">
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-sm md:text-base truncate">{product.name}</h4>
-                      <div className="flex flex-wrap gap-2 md:gap-4 mt-1">
-                        <p className="text-xs md:text-sm text-gray-600">₲ {formatGuaranies(product.price)}</p>
-                        <p className="text-xs md:text-sm text-gray-600">Stock: {product.stock} unidades</p>
-                        <p className="text-xs md:text-sm text-gray-600">{product.category}</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-2 self-end sm:self-center">
-                      <Button variant="ghost" size="sm" onClick={() => handleEditProduct(product)} className="h-8 w-8 p-0">
-                        <Edit className="size-3 md:size-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm" onClick={() => handleDeleteProduct(product)} className="h-8 w-8 p-0">
-                        <Trash2 className="size-3 md:size-4 text-red-500" />
-                      </Button>
-                    </div>
+                  <div className="flex-1">
+                    <p className="font-medium">Modo Claro</p>
+                    <p className="text-sm text-muted-foreground">Interfaz brillante y moderna</p>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* TAB DE ARTÍCULOS MISCELÁNEOS */}
-        <TabsContent value="miscItems" className="mt-6">
-          <Card>
-            <CardHeader>
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-                <div>
-                  <CardTitle className="text-lg md:text-xl">Gestión de Artículos Misceláneos</CardTitle>
-                  <p className="text-xs md:text-sm text-gray-600">{miscItems.length} artículos registrados</p>
+                  {theme === 'light' && (
+                    <div className="size-4 rounded-full bg-blue-600" />
+                  )}
                 </div>
-                <Dialog open={isMiscItemDialogOpen} onOpenChange={(open) => {
-                  setIsMiscItemDialogOpen(open);
-                  if (!open) resetMiscItemForm();
-                }}>
-                  <DialogTrigger asChild>
-                    <Button className="text-sm">
-                      <Plus className="size-3 md:size-4 mr-2" />
-                      Nuevo Artículo Misceláneo
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>
-                        {editingMiscItem ? 'Editar Artículo Misceláneo' : 'Agregar Nuevo Artículo Misceláneo'}
-                      </DialogTitle>
-                      <DialogDescription>
-                        Configura el nombre, precio, stock y categoría del artículo misceláneo
-                      </DialogDescription>
-                    </DialogHeader>
-                    <form onSubmit={handleMiscItemSubmit} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="miscItemName">Nombre del Artículo Misceláneo</Label>
-                        <Input
-                          id="miscItemName"
-                          placeholder="Ej: Cinta Adhesiva"
-                          value={miscItemForm.name}
-                          onChange={(e) => setMiscItemForm({ ...miscItemForm, name: e.target.value })}
-                          required
-                        />
-                      </div>
+              </button>
 
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="miscItemPrice">Precio (₲)</Label>
-                          <Input
-                            id="miscItemPrice"
-                            type="text"
-                            placeholder="15000"
-                            value={miscItemForm.price}
-                            onChange={(e) => handleMiscItemPriceChange(e.target.value)}
-                            required
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="miscItemStock">Stock Inicial</Label>
-                          <Input
-                            id="miscItemStock"
-                            type="number"
-                            min="0"
-                            placeholder="50"
-                            value={miscItemForm.stock}
-                            onChange={(e) => setMiscItemForm({ ...miscItemForm, stock: e.target.value })}
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="miscItemMinStock">Stock Mínimo (Alerta)</Label>
-                        <Input
-                          id="miscItemMinStock"
-                          type="number"
-                          min="0"
-                          placeholder="10"
-                          value={miscItemForm.minStock}
-                          onChange={(e) => setMiscItemForm({ ...miscItemForm, minStock: e.target.value })}
-                          required
-                        />
-                        <p className="text-sm text-gray-500">
-                          Se te alertará cuando el stock llegue a este nivel
-                        </p>
-                      </div>
-
-                      <Button type="submit" className="w-full">
-                        {editingMiscItem ? 'Actualizar Artículo Misceláneo' : 'Agregar Artículo Misceláneo'}
-                      </Button>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {miscItems.map((miscItem) => (
-                  <div key={miscItem.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 md:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors gap-2">
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-sm md:text-base truncate">{miscItem.name}</h4>
-                      <div className="flex flex-wrap gap-2 md:gap-4 mt-1">
-                        <p className="text-xs md:text-sm text-gray-600">₲ {formatGuaranies(miscItem.price)}</p>
-                        <p className="text-xs md:text-sm text-gray-600">Stock: {miscItem.stock} unidades</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-2 self-end sm:self-center">
-                      <Button variant="ghost" size="sm" onClick={() => handleEditMiscItem(miscItem)} className="h-8 w-8 p-0">
-                        <Edit className="size-3 md:size-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm" onClick={() => handleDeleteMiscItem(miscItem)} className="h-8 w-8 p-0">
-                        <Trash2 className="size-3 md:size-4 text-red-500" />
-                      </Button>
-                    </div>
+              {/* Modo Nocturno */}
+              <button
+                onClick={() => handleThemeChange('dark')}
+                className={`w-full p-4 rounded-lg border-2 transition-all text-left hover:shadow-md ${
+                  theme === 'dark' 
+                    ? 'border-blue-600 bg-secondary' 
+                    : 'border-border hover:border-primary bg-card'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="bg-secondary p-3 rounded-full shadow-sm">
+                    <Moon className="size-6 text-gray-300" />
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+                  <div className="flex-1">
+                    <p className="font-medium">Modo Nocturno</p>
+                    <p className="text-sm text-muted-foreground">Ideal para ambientes oscuros</p>
+                  </div>
+                  {theme === 'dark' && (
+                    <div className="size-4 rounded-full bg-blue-600" />
+                  )}
+                </div>
+              </button>
+
+              {/* Modo Oceánico */}
+              <button
+                onClick={() => handleThemeChange('ocean')}
+                className={`w-full p-4 rounded-lg border-2 transition-all text-left hover:shadow-md ${
+                  theme === 'ocean' 
+                    ? 'border-blue-600 bg-secondary' 
+                    : 'border-border hover:border-primary bg-card'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="bg-secondary p-3 rounded-full shadow-sm">
+                    <Waves className="size-6 text-blue-300" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium">Modo Oceánico</p>
+                    <p className="text-sm text-muted-foreground">Elegante y profesional</p>
+                  </div>
+                  {theme === 'ocean' && (
+                    <div className="size-4 rounded-full bg-blue-600" />
+                  )}
+                </div>
+              </button>
+            </div>
+
+            <div className="pt-4 border-t">
+              <p className="text-sm text-muted-foreground">
+                El tema seleccionado se aplicará en toda la aplicación y se guardará para futuras sesiones.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       <ConfirmModal
         open={showConfirmModal}

@@ -287,7 +287,7 @@ export function CashManagementModule() {
             </div>
             <div>
               <CardTitle className="text-lg md:text-xl">Habilitar Nueva Caja</CardTitle>
-              <p className="text-xs md:text-sm text-gray-600">Abrir caja para un cajero</p>
+              <p className="text-xs md:text-sm text-muted-foreground">Abrir caja para un cajero</p>
             </div>
           </div>
         </CardHeader>
@@ -313,7 +313,7 @@ export function CashManagementModule() {
               <div className="space-y-2">
                 <Label htmlFor="openingAmount" className="text-sm">Monto Inicial (Fondo de Cambio)</Label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                     ₲
                   </span>
                   <Input
@@ -358,7 +358,7 @@ export function CashManagementModule() {
                         </div>
                         <div>
                           <CardTitle className="text-lg">{cashRegister.userName}</CardTitle>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-muted-foreground">
                             ID: {cashRegister.id}
                           </p>
                         </div>
@@ -370,32 +370,32 @@ export function CashManagementModule() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-gray-50 p-3 rounded-lg">
-                        <p className="text-sm text-gray-600">Monto Inicial</p>
+                      <div className="bg-secondary p-3 rounded-lg">
+                        <p className="text-sm text-muted-foreground">Monto Inicial</p>
                         <p className="text-lg">₲ {formatGuaranies(cashRegister.openingAmount)}</p>
                       </div>
-                      <div className="bg-gray-50 p-3 rounded-lg">
-                        <p className="text-sm text-gray-600">Ventas Totales</p>
+                      <div className="bg-secondary p-3 rounded-lg">
+                        <p className="text-sm text-muted-foreground">Ventas Totales</p>
                         <p className="text-lg">₲ {formatGuaranies(stats.totalSales)}</p>
                       </div>
-                      <div className="bg-gray-50 p-3 rounded-lg">
-                        <p className="text-sm text-gray-600">Ventas en Efectivo</p>
+                      <div className="bg-secondary p-3 rounded-lg">
+                        <p className="text-sm text-muted-foreground">Ventas en Efectivo</p>
                         <p className="text-lg">₲ {formatGuaranies(stats.cashSales)}</p>
                       </div>
-                      <div className="bg-gray-50 p-3 rounded-lg">
-                        <p className="text-sm text-gray-600">N° Transacciones</p>
+                      <div className="bg-secondary p-3 rounded-lg">
+                        <p className="text-sm text-muted-foreground">N° Transacciones</p>
                         <p className="text-lg">{stats.transactionCount}</p>
                       </div>
                     </div>
 
-                    <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                      <p className="text-sm text-blue-800">
+                    <div className="bg-secondary border p-3 rounded-lg">
+                      <p className="text-sm text-muted-foreground">
                         <strong>Efectivo esperado en caja:</strong>
                       </p>
-                      <p className="text-xl text-blue-900">
+                      <p className="text-xl">
                         ₲ {formatGuaranies(cashRegister.openingAmount + stats.cashSales)}
                       </p>
-                      <p className="text-xs text-blue-700 mt-1">
+                      <p className="text-xs text-muted-foreground mt-1">
                         (Monto inicial + ventas en efectivo)
                       </p>
                     </div>
@@ -418,8 +418,8 @@ export function CashManagementModule() {
 
       {activeCashRegisters.length === 0 && (
         <Card>
-          <CardContent className="py-12 text-center text-gray-500">
-            <DollarSign className="size-12 mx-auto mb-4 text-gray-400" />
+          <CardContent className="py-12 text-center text-muted-foreground">
+            <DollarSign className="size-12 mx-auto mb-4 text-muted-foreground" />
             <p>No hay cajas activas en este momento</p>
             <p className="text-sm">Habilita una caja para que un cajero pueda trabajar</p>
           </CardContent>
@@ -443,24 +443,24 @@ export function CashManagementModule() {
 
             return (
               <div className="space-y-4">
-                <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+                <div className="bg-secondary p-4 rounded-lg space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Monto Inicial:</span>
+                    <span className="text-muted-foreground">Monto Inicial:</span>
                     <span>₲ {formatGuaranies(cashRegisterToClose.openingAmount)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Ventas Totales:</span>
+                    <span className="text-muted-foreground">Ventas Totales:</span>
                     <span>₲ {formatGuaranies(stats.totalSales)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Ventas en Efectivo:</span>
+                    <span className="text-muted-foreground">Ventas en Efectivo:</span>
                     <span className="text-green-600">₲ {formatGuaranies(stats.cashSales)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Ventas con Tarjeta/Transfer:</span>
+                    <span className="text-muted-foreground">Ventas con Tarjeta/Transfer:</span>
                     <span>₲ {formatGuaranies(stats.totalSales - stats.cashSales)}</span>
                   </div>
-                  <div className="flex justify-between pt-2 border-t border-gray-300">
+                  <div className="flex justify-between pt-2 border-t">
                     <span className="font-semibold">Efectivo Esperado en Caja:</span>
                     <span className="text-xl text-blue-600">
                       ₲ {formatGuaranies(expectedCash)}
@@ -471,7 +471,7 @@ export function CashManagementModule() {
                 <div className="space-y-2">
                   <Label htmlFor="actualCash">Efectivo Real Contado en Caja</Label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                       ₲
                     </span>
                     <Input
@@ -483,7 +483,7 @@ export function CashManagementModule() {
                       className="pl-8 text-xl"
                     />
                   </div>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-muted-foreground">
                     Cuente todo el efectivo físico que hay en la caja (incluyendo el monto inicial)
                   </p>
                 </div>

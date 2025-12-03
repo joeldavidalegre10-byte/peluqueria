@@ -25,8 +25,8 @@ export function AperturaCaja({ onOpen }: AperturaCajaProps) {
       <Card>
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="bg-green-100 p-4 rounded-full">
-              <DollarSign className="size-8 text-green-600" />
+            <div className="bg-secondary p-4 rounded-full">
+              <DollarSign className="size-8 text-green-600 dark:text-green-400 ocean:text-green-400" />
             </div>
           </div>
           <CardTitle>Apertura de Caja</CardTitle>
@@ -39,7 +39,7 @@ export function AperturaCaja({ onOpen }: AperturaCajaProps) {
             <div className="space-y-2">
               <Label htmlFor="openingAmount">Monto Inicial (Fondo de Cambio)</Label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                   $
                 </span>
                 <Input
@@ -54,13 +54,13 @@ export function AperturaCaja({ onOpen }: AperturaCajaProps) {
                   required
                 />
               </div>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted-foreground">
                 Ejemplo: Si comienzas con $50 en efectivo para dar cambio
               </p>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-              <p className="text-sm text-blue-800">
+            <div className="bg-secondary border p-4 rounded-lg">
+              <p className="text-sm text-muted-foreground">
                 <strong>Información:</strong> Este monto será el fondo de cambio para el día. 
                 Al cierre de caja, el sistema verificará que el efectivo físico coincida con 
                 este monto inicial más los ingresos en efectivo del día.

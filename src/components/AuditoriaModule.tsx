@@ -105,32 +105,32 @@ export function AuditoriaModule() {
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
-            <p className="text-sm text-gray-600">Cajero</p>
+            <p className="text-sm text-muted-foreground">Cajero</p>
             <p>{cashRegister.userName}</p>
           </div>
           <div className="space-y-1">
-            <p className="text-sm text-gray-600">Estado</p>
+            <p className="text-sm text-muted-foreground">Estado</p>
             <div>{getStatusBadge(cashRegister.status)}</div>
           </div>
           <div className="space-y-1">
-            <p className="text-sm text-gray-600">Apertura</p>
+            <p className="text-sm text-muted-foreground">Apertura</p>
             <p>{formatDate(cashRegister.openingDate)}</p>
           </div>
           <div className="space-y-1">
-            <p className="text-sm text-gray-600">Cierre</p>
+            <p className="text-sm text-muted-foreground">Cierre</p>
             <p>{cashRegister.closingDate ? formatDate(cashRegister.closingDate) : 'N/A'}</p>
           </div>
         </div>
 
-        <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+        <div className="bg-secondary p-4 rounded-lg space-y-2">
           <h4>Movimientos de Caja</h4>
           <div className="space-y-1">
             <div className="flex justify-between">
-              <span className="text-gray-600">Monto Inicial:</span>
+              <span className="text-muted-foreground">Monto Inicial:</span>
               <span>₲ {formatGuaranies(cashRegister.openingAmount || 0)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Ingresos en Efectivo:</span>
+              <span className="text-muted-foreground">Ingresos en Efectivo:</span>
               <span>₲ {formatGuaranies(cashSales)}</span>
             </div>
             <div className="flex justify-between pt-2 border-t">
@@ -158,19 +158,19 @@ export function AuditoriaModule() {
           </div>
         </div>
 
-        <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+        <div className="bg-secondary p-4 rounded-lg space-y-2">
           <h4>Ventas por Método de Pago</h4>
           <div className="space-y-1">
             <div className="flex flex-col sm:flex-row justify-between gap-1">
-              <span className="text-gray-600">Efectivo:</span>
+              <span className="text-muted-foreground">Efectivo:</span>
               <span className="font-semibold">₲ {formatGuaranies(cashSales)}</span>
             </div>
             <div className="flex flex-col sm:flex-row justify-between gap-1">
-              <span className="text-gray-600">Tarjeta:</span>
+              <span className="text-muted-foreground">Tarjeta:</span>
               <span className="font-semibold">₲ {formatGuaranies(cardSales)}</span>
             </div>
             <div className="flex flex-col sm:flex-row justify-between gap-1">
-              <span className="text-gray-600">Transferencia:</span>
+              <span className="text-muted-foreground">Transferencia:</span>
               <span className="font-semibold">₲ {formatGuaranies(transferSales)}</span>
             </div>
             <div className="flex flex-col sm:flex-row justify-between pt-2 border-t gap-1">
@@ -182,17 +182,21 @@ export function AuditoriaModule() {
           </div>
         </div>
 
-        <div className="bg-gray-50 p-4 rounded-lg">
+        <div className="bg-secondary p-4 rounded-lg">
           <h4 className="mb-2">Transacciones ({transactions.length})</h4>
           <div className="space-y-2 max-h-64 overflow-y-auto">
-            {transactions.map((t: any, idx) => (
-              <div key={t.id} className="bg-white p-3 rounded border">
+            {transactions.length === 0 ? (
+              <p className="text-center text-muted-foreground py-4">No hay transacciones</p>
+            ) : (
+              transactions.map((t: any, idx) => (
+              <div key={t.id} className="bg-card p-3 rounded border">
                 <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <p className="text-sm">
-                      #{idx + 1} - {new Date(t.date).toLocaleTimeString('es-ES')}
+                  <div>
+                    <p className="font-medium">
+                      {t.type === 'servicio' ? 'Servicio' : 'Producto'} - ₲{' '}
+                      {formatGuaranies(t.total)}
                     </p>
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-muted-foreground">
                       {t.items.length} item(s) - {t.paymentMethod}
                     </p>
                     {t.paymentMethod === 'mixto' && t.paymentDetails && (
@@ -212,7 +216,8 @@ export function AuditoriaModule() {
                   <span className="text-green-600 ml-2">₲ {formatGuaranies(t.total)}</span>
                 </div>
               </div>
-            ))}
+            ))
+            )}
           </div>
         </div>
       </div>
@@ -230,7 +235,7 @@ export function AuditoriaModule() {
                 <Calendar className="size-5 text-blue-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-600">Total Cierres</p>
+                <p className="text-xs text-muted-foreground">Total Cierres</p>
                 <p className="text-lg font-semibold">{totalCierres}</p>
               </div>
             </div>
@@ -244,7 +249,7 @@ export function AuditoriaModule() {
                 <CheckCircle className="size-5 text-green-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-600">Cierres Correctos</p>
+                <p className="text-xs text-muted-foreground">Cierres Correctos</p>
                 <p className="text-lg font-semibold">{cierresCorrectos}</p>
               </div>
             </div>
@@ -258,7 +263,7 @@ export function AuditoriaModule() {
                 <AlertCircle className="size-5 text-yellow-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-600">Con Diferencias</p>
+                <p className="text-xs text-muted-foreground">Con Diferencias</p>
                 <p className="text-lg font-semibold">{cierresConDiferencia}</p>
               </div>
             </div>
@@ -272,7 +277,7 @@ export function AuditoriaModule() {
                 <TrendingDown className="size-5 text-red-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-600">Total Diferencias</p>
+                <p className="text-xs text-muted-foreground">Total Diferencias</p>
                 <p className="text-lg font-semibold">₲ {formatGuaranies(totalDiferencias)}</p>
               </div>
             </div>
@@ -325,8 +330,8 @@ export function AuditoriaModule() {
 
             <div className="grid grid-cols-1 gap-3">
               {sortedRegisters.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
-                  <Calendar className="size-12 mx-auto mb-4 text-gray-400" />
+                <div className="text-center py-12 text-muted-foreground">
+                  <Calendar className="size-12 mx-auto mb-4 text-muted-foreground" />
                   <p>No hay cierres de caja registrados</p>
                 </div>
               ) : (
@@ -336,27 +341,27 @@ export function AuditoriaModule() {
                       <div className="flex items-center justify-between">
                         <div className="flex-1 grid grid-cols-5 gap-4">
                           <div>
-                            <p className="text-sm text-gray-600">Fecha</p>
+                            <p className="text-sm text-muted-foreground">Fecha</p>
                             <p>
                               {new Date(cashRegister.openingDate).toLocaleDateString('es-ES')}
                             </p>
                           </div>
                           <div>
-                            <p className="text-sm text-gray-600">Cajero</p>
+                            <p className="text-sm text-muted-foreground">Cajero</p>
                             <p>{cashRegister.userName}</p>
                           </div>
                           <div>
-                            <p className="text-sm text-gray-600">Estado</p>
+                            <p className="text-sm text-muted-foreground">Estado</p>
                             <div className="mt-1">{getStatusBadge(cashRegister.status)}</div>
                           </div>
                           <div>
-                            <p className="text-sm text-gray-600">Total Ventas</p>
+                            <p className="text-sm text-muted-foreground">Total Ventas</p>
                             <p className="text-green-600">
                               ₲ {formatGuaranies(cashRegister.totalSales || 0)}
                             </p>
                           </div>
                           <div>
-                            <p className="text-sm text-gray-600">Diferencia</p>
+                            <p className="text-sm text-muted-foreground">Diferencia</p>
                             <p
                               className={
                                 (cashRegister.difference || 0) === 0
