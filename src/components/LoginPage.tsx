@@ -77,7 +77,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 dark:from-black dark:via-black dark:to-black ocean:from-black ocean:via-black ocean:to-black flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white dark:bg-black ocean:bg-[#0d1b2a] flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">

@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { User, CashRegister, TransactionItem } from '../App';
 import { Button } from './ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { LogOut, ShoppingCart, Calendar, AlertCircle, History, Menu } from 'lucide-react';
+import { LogOut, ShoppingCart, Calendar, AlertCircle, History, Menu, Settings } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
 import { VentasModule } from './VentasModule';
 import { CitasModule } from './CitasModule';
 import { HistorialVentasModule } from './HistorialVentasModule';
+import { CashierConfigModule } from './CashierConfigModule';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Alert, AlertDescription } from './ui/alert';
 import { KeyboardShortcutsIndicator } from './KeyboardShortcutsIndicator';
@@ -32,7 +33,7 @@ export function CajeroDashboard({ user, onLogout }: CajeroDashboardProps) {
         return;
       }
 
-      const tabs = ['ventas', 'citas', 'historial'];
+      const tabs = ['ventas', 'citas', 'historial', 'config'];
       const currentIndex = tabs.indexOf(activeTab);
 
       if (e.key === 'ArrowRight') {
@@ -86,6 +87,7 @@ export function CajeroDashboard({ user, onLogout }: CajeroDashboardProps) {
     { value: 'ventas', icon: ShoppingCart, label: 'Punto de Venta' },
     { value: 'citas', icon: Calendar, label: 'Citas' },
     { value: 'historial', icon: History, label: 'Historial de Ventas' },
+    { value: 'config', icon: Settings, label: 'Configuración' },
   ];
 
   const handleMenuItemClick = (value: string) => {
@@ -120,7 +122,7 @@ export function CajeroDashboard({ user, onLogout }: CajeroDashboardProps) {
                           variant={activeTab === item.value ? 'default' : 'ghost'}
                           className="justify-start"
                           onClick={() => handleMenuItemClick(item.value)}
-                          disabled={!cashRegister}
+                          disabled={!cashRegister && item.value !== 'config'}
                         >
                           <Icon className="size-4 mr-3" />
                           {item.label}
@@ -147,15 +149,15 @@ export function CajeroDashboard({ user, onLogout }: CajeroDashboardProps) {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {!cashRegister ? (
+        {!cashRegister && activeTab !== 'config' ? (
           <Card>
             <CardHeader>
               <CardTitle>Esperando Apertura de Caja</CardTitle>
             </CardHeader>
             <CardContent>
-              <Alert className="bg-yellow-50 border-yellow-200">
-                <AlertCircle className="size-4 text-yellow-600" />
-                <AlertDescription className="text-yellow-800">
+              <Alert className="bg-secondary border-border">
+                <AlertCircle className="size-4 text-orange-600 dark:text-orange-400 ocean:text-orange-400" />
+                <AlertDescription className="text-foreground">
                   <strong>Atención:</strong> La caja aún no ha sido habilitada. 
                   Por favor, solicite al administrador que abra la caja para poder comenzar a trabajar.
                 </AlertDescription>
@@ -164,43 +166,59 @@ export function CajeroDashboard({ user, onLogout }: CajeroDashboardProps) {
           </Card>
         ) : (
           <>
-            <KeyboardShortcutsIndicator />
+            {cashRegister && <KeyboardShortcutsIndicator />}
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               {/* Desktop Tabs - Hidden on mobile */}
-              <div className="hidden md:block">
-                <TabsList className="grid w-full grid-cols-3 max-w-2xl">
-                  <TabsTrigger value="ventas">
-                    <ShoppingCart className="size-4 mr-2" />
-                    Ventas
-                  </TabsTrigger>
-                  <TabsTrigger value="citas">
-                    <Calendar className="size-4 mr-2" />
-                    Citas
-                  </TabsTrigger>
-                  <TabsTrigger value="historial">
-                    <History className="size-4 mr-2" />
-                    Historial
-                  </TabsTrigger>
-                </TabsList>
-              </div>
+              {cashRegister && (
+                <div className="hidden md:block">
+                  <TabsList className="grid w-full grid-cols-4 max-w-3xl">
+                    <TabsTrigger value="ventas">
+                      <ShoppingCart className="size-4 mr-2" />
+                      Ventas
+                    </TabsTrigger>
+                    <TabsTrigger value="citas">
+                      <Calendar className="size-4 mr-2" />
+                      Citas
+                    </TabsTrigger>
+                    <TabsTrigger value="historial">
+                      <History className="size-4 mr-2" />
+                      Historial
+                    </TabsTrigger>
+                    <TabsTrigger value="config">
+                      <Settings className="size-4 mr-2" />
+                      Config
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
+              )}
 
               {/* Mobile: Show current tab name */}
-              <div className="md:hidden mb-4">
-                <h2 className="text-lg">
-                  {menuItems.find(item => item.value === activeTab)?.label}
-                </h2>
-              </div>
+              {cashRegister && (
+                <div className="md:hidden mb-4">
+                  <h2 className="text-lg">
+                    {menuItems.find(item => item.value === activeTab)?.label}
+                  </h2>
+                </div>
+              )}
 
-            <TabsContent value="ventas" className="mt-6">
-              <VentasModule cashRegister={cashRegister} cart={cart} setCart={setCart} />
-            </TabsContent>
+            {cashRegister && (
+              <>
+                <TabsContent value="ventas" className="mt-6">
+                  <VentasModule cashRegister={cashRegister} cart={cart} setCart={setCart} />
+                </TabsContent>
 
-            <TabsContent value="citas" className="mt-6">
-              <CitasModule />
-            </TabsContent>
+                <TabsContent value="citas" className="mt-6">
+                  <CitasModule />
+                </TabsContent>
 
-            <TabsContent value="historial" className="mt-6">
-              <HistorialVentasModule cashRegister={cashRegister} onLoadToCart={handleLoadToCart} />
+                <TabsContent value="historial" className="mt-6">
+                  <HistorialVentasModule cashRegister={cashRegister} onLoadToCart={handleLoadToCart} />
+                </TabsContent>
+              </>
+            )}
+
+            <TabsContent value="config" className="mt-6">
+              <CashierConfigModule />
             </TabsContent>
             </Tabs>
           </>

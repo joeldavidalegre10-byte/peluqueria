@@ -1,4 +1,5 @@
 @custom-variant dark (&:is(.dark *));
+@custom-variant ocean (&:is(.ocean *));
 
 :root {
   --font-size: 16px;
@@ -79,25 +80,25 @@
 }
 
 .ocean {
-  --background: #0a1929;
+  --background: #0d1b2a;
   --foreground: #e3f2fd;
-  --card: #132f4c;
+  --card: #1b2838;
   --card-foreground: #e3f2fd;
-  --popover: #132f4c;
+  --popover: #1b2838;
   --popover-foreground: #e3f2fd;
   --primary: #5090d3;
   --primary-foreground: #ffffff;
-  --secondary: #1e4976;
+  --secondary: #1e3a5f;
   --secondary-foreground: #e3f2fd;
-  --muted: #1a3a52;
+  --muted: #1e3a5f;
   --muted-foreground: #90caf9;
-  --accent: #1e4976;
+  --accent: #1e3a5f;
   --accent-foreground: #e3f2fd;
   --destructive: #f44336;
   --destructive-foreground: #ffffff;
   --border: rgba(144, 202, 249, 0.2);
   --input: rgba(144, 202, 249, 0.1);
-  --input-background: #1a3a52;
+  --input-background: #1e3a5f;
   --switch-background: #1e4976;
   --ring: #5090d3;
   --font-weight-medium: 500;
@@ -107,11 +108,11 @@
   --chart-3: #ffa726;
   --chart-4: #ab47bc;
   --chart-5: #ef5350;
-  --sidebar: #0d2238;
+  --sidebar: #0d1b2a;
   --sidebar-foreground: #e3f2fd;
   --sidebar-primary: #5090d3;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1e4976;
+  --sidebar-accent: #1e3a5f;
   --sidebar-accent-foreground: #e3f2fd;
   --sidebar-border: rgba(144, 202, 249, 0.2);
   --sidebar-ring: #5090d3;

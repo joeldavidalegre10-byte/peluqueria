@@ -34,7 +34,7 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
         return;
       }
 
-      const tabs = ['caja', 'ventasCajeros', 'usuarios', 'reportes', 'auditoria', 'inventario', 'citas', 'ventas', 'config'];
+      const tabs = ['caja', 'ventasCajeros', 'usuarios', 'reportes', 'auditoria', 'inventario', 'tpv', 'citas', 'config'];
       const currentIndex = tabs.indexOf(activeTab);
 
       if (e.key === 'ArrowRight') {
@@ -70,9 +70,9 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
     { value: 'reportes', icon: BarChart3, label: 'Reportes' },
     { value: 'auditoria', icon: DollarSign, label: 'Auditoría' },
     { value: 'inventario', icon: Package, label: 'Inventario' },
-    { value: 'config', icon: Settings, label: 'Configuración' },
     { value: 'tpv', icon: ShoppingCart, label: 'Punto de Venta' },
     { value: 'citas', icon: Calendar, label: 'Citas' },
+    { value: 'config', icon: Settings, label: 'Configuración' },
   ];
 
   const handleMenuItemClick = (value: string) => {
@@ -162,10 +162,6 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
                 <Package className="size-3 sm:size-4 mr-1 sm:mr-2" />
                 Inventario
               </TabsTrigger>
-              <TabsTrigger value="config" className="text-xs whitespace-nowrap px-2 sm:px-3">
-                <Settings className="size-3 sm:size-4 mr-1 sm:mr-2" />
-                Config
-              </TabsTrigger>
               <TabsTrigger value="tpv" className="text-xs whitespace-nowrap px-2 sm:px-3">
                 <ShoppingCart className="size-3 sm:size-4 mr-1 sm:mr-2" />
                 TPV
@@ -173,6 +169,10 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
               <TabsTrigger value="citas" className="text-xs whitespace-nowrap px-2 sm:px-3">
                 <Calendar className="size-3 sm:size-4 mr-1 sm:mr-2" />
                 Citas
+              </TabsTrigger>
+              <TabsTrigger value="config" className="text-xs whitespace-nowrap px-2 sm:px-3">
+                <Settings className="size-3 sm:size-4 mr-1 sm:mr-2" />
+                Config
               </TabsTrigger>
             </TabsList>
           </div>
@@ -208,16 +208,16 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
             <InventoryModule />
           </TabsContent>
 
-          <TabsContent value="config" className="mt-6">
-            <ConfigModule />
-          </TabsContent>
-
           <TabsContent value="tpv" className="mt-6">
             <VentasModule cashRegister={mockCashRegister} cart={cart} setCart={setCart} />
           </TabsContent>
 
           <TabsContent value="citas" className="mt-6">
             <CitasModule />
+          </TabsContent>
+
+          <TabsContent value="config" className="mt-6">
+            <ConfigModule />
           </TabsContent>
         </Tabs>
       </main>
